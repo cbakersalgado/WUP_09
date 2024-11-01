@@ -48,24 +48,170 @@ Whitefish <- select(Whitefish, -Species)
 
 # For each of the three species of fish listed below, determine the best regression model and also the best 2 element regression model. Use the BestSubset Regression helper file.
 
-
 ## Perch
+
+Find the best two predictors for the Perch weight.
+
+```{r}
+Perchwtall=lm(Weight~.-Weight,data=Perch)
+summary.lm(Perchwtall)
+```
+
+
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = Perch,
+               nbest = 2,       # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
+```
+
+
+##Which is best?  
+
+```{r}
+which.max(summary.out$adjr2)
+```
+```{r}
+summary.out$which[3,]
+```
+
+```{r}
+best.model <- lm(Weight~Height+Width,data=Perch)
+summary(best.model)
+```
+
+```{r}
+anova(best.model,Perchwtall)
+``` 
 
 ### Best Models
 
+The best models for the Perch would be all of the above.
+
 ### Best Two regressor model
+
+The best option that uses both variables are width and height
 
 
 ## Pike
 
+Find the best two predictors for the Pike weight.
+
+```{r}
+Pikehwtall=lm(Weight~.-Weight,data=Pike)
+summary.lm(Pikehwtall)
+```
+
+
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = Pike,
+               nbest = 2,       # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
+```
+
+
+
+##Which is best?  
+
+```{r}
+which.max(summary.out$adjr2)
+```
+```{r}
+summary.out$which[3,]
+```
+
+```{r}
+best.model <- lm(Weight~Height+Width,data=Pike)
+summary(best.model)
+```
+
+
+```{r}
+anova(best.model,Pikehwtall)
+``` 
+
 ### Best Models
 
+The best model used would be all of the above.
+
 ### Best Two regressor model
+
+The best model that uses two variables would be Length1 and Length3.
+
 
 ## Roach
 
+```{r}
+Roachwtall=lm(Weight~.-Weight,data=Roach)
+summary.lm(Roachwtall)
+```
+
+```{r}
+library(leaps)
+regsubsets.out <-
+    regsubsets(Weight ~ .,
+               data = Roach,
+               nbest = 2,       # 1 best model for each number of predictors
+               nvmax = NULL,    # NULL for no limit on number of variables
+               force.in = NULL, force.out = NULL,
+               method = "exhaustive")
+summary.out <- summary(regsubsets.out)
+as.data.frame(summary.out$outmat)
+library(car)
+subsets(regsubsets.out,statistic="adjr2",legend="bottomright",main="Adjusted R^2")
+```
+
+
+
+##Which is best?
+
+```{r}
+which.max(summary.out$adjr2)
+```
+```{r}
+summary.out$which[3,]
+```
+
+```{r}
+best.model <- lm(Weight~Length3+Width,data=Roach)
+summary(best.model)
+```
+
+
+```{r}
+anova(best.model,Roachwtall)
+```
+
+
 ### Best Models
+
+The best models out of each is all of the above.
 
 ### Best Two regressor model
 
-## Final Summary Statements
+Out of everything the best model using two variables is Length1 and Width.
+
+## Final Summary Statements    
+
+For the Perch section, the best model is all variables, the best variables with two regressors would be height and Width.
+
+For the Pike section, the best model is all variables, the best variables with two regressors would be Length1 and Length3.
+
+For the Roach section, the best model is all variables, the best variables with two regressors would be Length3 and Width.
